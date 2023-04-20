@@ -1,4 +1,10 @@
-import { AckPolicy, JetStreamClient, JetStreamPullSubscription, NatsConnection, connect, nanos } from "nats";
+import {
+  AckPolicy,
+  JetStreamClient,
+  JetStreamPullSubscription,
+  NatsConnection,
+  connect
+} from "nats";
 
 export class NatsController {
   private js: JetStreamClient | undefined;
