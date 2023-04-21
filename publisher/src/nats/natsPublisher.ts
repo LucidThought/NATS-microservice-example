@@ -44,7 +44,7 @@ export class NatsPublisher {
   async publishToJetStream() {
     let jsMessage = {
       message: "Hello, is anyone there?",
-      number: Math.floor(Math.random()*1024),
+      number: Math.floor(Math.random()*4000),
       boolean: true
     };
     console.log(`Number sent: ${jsMessage.number}`)
@@ -58,7 +58,7 @@ export class NatsPublisher {
       this.subj,
       this.jsonCodec.encode(jsMessage),
       {
-        msgID: "a",
+        msgID: Math.random().toString(),
         expect: { streamName: this.stream },
       }
     );

@@ -11,7 +11,7 @@ class MessagePublisher {
     console.log("Publishing Message");
     const interval = setInterval(async () => {
       await this.natsPublisher.publishToJetStream();
-    }, 2000)
+    }, 1000)
 
   }
 }

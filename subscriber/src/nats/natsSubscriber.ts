@@ -39,7 +39,7 @@ export class NatsSubscriber {
   async configurePullSubscription() {
     console.log("Configure Pull Subscription");
     this.psub = await this.js!.pullSubscribe(this.subj, {
-      // mack: true,
+      mack: true,
       config: {
         durable_name: this.durable,
         ack_policy: AckPolicy.Explicit,
@@ -64,33 +64,18 @@ export class NatsSubscriber {
     })();
   }
 
-
-
-  private fn = () => {
-    console.log("[PULL]");
-    this.psub!.pull({ batch: 10, expires: 10000 });
-  };
-
   public startPulling() {
     console.log("Start Pulling!");
-    // this.pullSubscribe();
-    console.log("Reading New Messages");
-    (async () => {
-      for await (const m of this.psub!) {
-        console.log(
-          `[${m.seq}] ${
-            m.redelivered ? `- redelivery ${m.info.redeliveryCount}` : ""
-          }`,
-        );
-        console.log(this.jsonCodec.decode(m.data));
-        m.ack();
-      }
-    })();
+    this.pullSubscribe();
 
+    const fn = () => {
+      console.log("[PULL]");
+      this.psub!.pull({ batch: 1000, expires: 10000 });
+    };
     // do the initial pull
-    // this.fn();
+    fn();
     // and now schedule a pull every so often
-    const interval = setInterval(this.fn, 5000); // and repeat every 5s
+    const interval = setInterval(fn, 10000); // and repeat every 10s
 
     // setTimeout(() => {
     //   clearInterval(interval);
