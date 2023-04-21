@@ -44,32 +44,28 @@ export class NatsPublisher {
   async publishToJetStream() {
     let jsMessage = {
       message: "Hello, is anyone there?",
-      number: 12345,
+      number: Math.floor(Math.random()*1024),
       boolean: true
     };
+    console.log(`Number sent: ${jsMessage.number}`)
 
     // the jetstream client provides a publish that returns
     // a confirmation that the message was received and stored
     // by the server. You can associate various expectations
     // when publishing a message to prevent duplicates.
     // If the expectations are not met, the message is rejected.
-    let pa = await this.js!.publish(this.subj, this.jsonCodec.encode(jsMessage), {
-      msgID: "a",
-      expect: { streamName: this.stream },
-    });
-    console.log(`${pa.stream}[${pa.seq}]: duplicate? ${pa.duplicate}`);
-
-    // pa = await this.js!.publish(this.subj, Empty, {
-    //   msgID: "a",
-    //   expect: { lastSequence: 1 },
-    // });
+    let pa = await this.js!.publish(
+      this.subj,
+      this.jsonCodec.encode(jsMessage),
+      {
+        msgID: "a",
+        expect: { streamName: this.stream },
+      }
+    );
     // console.log(`${pa.stream}[${pa.seq}]: duplicate? ${pa.duplicate}`);
-
     // await this.jsm!.streams.delete("B");
     // await this.nc!.drain();
   }
-
-
 }
 
 
