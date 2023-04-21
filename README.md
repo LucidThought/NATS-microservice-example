@@ -9,4 +9,3 @@ Because this project is being built for demonstration purposes a docker-compose 
 ## TODOs
 
 - Finish parsing of messages received from NATS, as these will be byte arrays that need to be converted to JSON before they can be utilized. The NATS library has helpers to accomplish this.
-- Build a `publisher` node project to publish messages to the NATS cluster. Eventually I will include instructions for spinning up multiple publishers, as this microservice messaging system will allow n publishers and m subscribers which should be able to start/stop freely without adjusting the NATS cluster.
