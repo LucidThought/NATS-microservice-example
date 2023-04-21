@@ -56,6 +56,7 @@ export class NatsController {
             m.redelivered ? `- redelivery ${m.info.redeliveryCount}` : ""
           }`,
         );
+        console.log(m);
         // if (m.seq % 2 === 0) {
           m.ack();
         // }
