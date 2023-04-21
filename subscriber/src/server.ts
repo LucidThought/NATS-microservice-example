@@ -1,7 +1,7 @@
-import { NatsController } from "./nats/natsHandler";
+import { NatsSubscriber } from "./nats/natsSubscriber";
 
 class MessagePuller {
-  private natsHandler = new NatsController();
+  private natsHandler = new NatsSubscriber();
 
   async run() {
     await this.natsHandler.configureStreamManager();

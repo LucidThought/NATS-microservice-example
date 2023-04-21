@@ -1,15 +1,17 @@
 import {
   AckPolicy,
+  JSONCodec,
   JetStreamClient,
   JetStreamPullSubscription,
   NatsConnection,
   connect
 } from "nats";
 
-export class NatsController {
+export class NatsSubscriber {
   private js: JetStreamClient | undefined;
   private psub: JetStreamPullSubscription | undefined;
   private nc: NatsConnection | undefined;
+  private jsonCodec = JSONCodec();
 
   private stream = "STREAM";
   private subj = "SUBJECT";
@@ -37,7 +39,7 @@ export class NatsController {
   async configurePullSubscription() {
     console.log("Configure Pull Subscription");
     this.psub = await this.js!.pullSubscribe(this.subj, {
-      mack: true,
+      // mack: true,
       config: {
         durable_name: this.durable,
         ack_policy: AckPolicy.Explicit,
@@ -56,10 +58,8 @@ export class NatsController {
             m.redelivered ? `- redelivery ${m.info.redeliveryCount}` : ""
           }`,
         );
-        console.log(m);
-        // if (m.seq % 2 === 0) {
-          m.ack();
-        // }
+        console.log(this.jsonCodec.decode(m.data));
+        m.ack();
       }
     })();
   }
@@ -68,17 +68,29 @@ export class NatsController {
 
   private fn = () => {
     console.log("[PULL]");
-    this.psub!.pull({ batch: 1000, expires: 10000 });
+    this.psub!.pull({ batch: 10, expires: 10000 });
   };
 
   public startPulling() {
     console.log("Start Pulling!");
-    this.pullSubscribe();
+    // this.pullSubscribe();
+    console.log("Reading New Messages");
+    (async () => {
+      for await (const m of this.psub!) {
+        console.log(
+          `[${m.seq}] ${
+            m.redelivered ? `- redelivery ${m.info.redeliveryCount}` : ""
+          }`,
+        );
+        console.log(this.jsonCodec.decode(m.data));
+        m.ack();
+      }
+    })();
 
     // do the initial pull
-    this.fn();
+    // this.fn();
     // and now schedule a pull every so often
-    const interval = setInterval(this.fn, 10000); // and repeat every 2s
+    const interval = setInterval(this.fn, 5000); // and repeat every 5s
 
     // setTimeout(() => {
     //   clearInterval(interval);
