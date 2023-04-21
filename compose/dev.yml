@@ -36,6 +36,23 @@ services:
     volumes:
       - ./jetstream-cluster/n3:/data
     depends_on:
+      - n1
       - n2
+  # Pull API
+  pull-api:
+    image: node:lts-alpine
+    container_name: pull-api
+    user: node
+    restart: always
+    working_dir: /home/node/app
+    volumes:
+      - ./node:/home/node/app
+    command: npm run dev
+    networks:
+      - nats
+    depends_on:
+      - n1
+      - n2
+      - n3
 networks:
   nats: {}
