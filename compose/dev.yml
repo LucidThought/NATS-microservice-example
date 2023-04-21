@@ -39,14 +39,14 @@ services:
       - n1
       - n2
   # Pull API
-  pull-api:
+  subscriber-api:
     image: node:lts-alpine
-    container_name: pull-api
+    container_name: subscriber-api
     user: node
     restart: always
     working_dir: /home/node/app
     volumes:
-      - ./node:/home/node/app
+      - ./subscriber:/home/node/app
     command: npm run dev
     networks:
       - nats
