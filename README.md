@@ -8,4 +8,5 @@ Because this project is being built for demonstration purposes a docker-compose 
 
 ## TODOs
 
-- Finish parsing of messages received from NATS, as these will be byte arrays that need to be converted to JSON before they can be utilized. The NATS library has helpers to accomplish this.
+- Separate the docker-compose files for the NATS cluster and the Pub/Sub group. Sometimes the NATS cluster doesn't initialize before the Pub/Sub systems come online and try to connect, causing a TIMEOUT error. Starting the NATS cluster and the TS Pub/Sub sytems will have to happen separately.
+- Find out why messages are being delivered to the Subscriber twice (consistently). If the Sub application is pulling existing messages on the NATS queue then duplicates are not seen, but when Sub has caught up to Pub and is reading messages are they are being delivered then duplicates are read from NATS. This may not be a problem, as these duplicates can be ignored in code, but it would be nice to know why this is ocurring.
