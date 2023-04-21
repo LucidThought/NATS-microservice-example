@@ -16,6 +16,7 @@ export class NatsController {
   private durable = "DURABLE";
 
   async configureStreamManager() {
+    console.log("Configure Stream")
     this.nc = await connect({
       servers: [
         "nats://n1:4222",
@@ -30,9 +31,11 @@ export class NatsController {
     );
 
     this.js = this.nc.jetstream();
+    console.log("Stream Configured")
   }
 
   async configurePullSubscription() {
+    console.log("Configure Pull Subscription");
     this.psub = await this.js!.pullSubscribe(this.subj, {
       mack: true,
       config: {
@@ -41,9 +44,11 @@ export class NatsController {
         ack_wait: 4000,
       },
     });
+    console.log("Pull Subscription Configured");
   }
 
   async pullSubscribe() {
+    console.log("Reading New Messages");
     (async () => {
       for await (const m of this.psub!) {
         console.log(
@@ -65,15 +70,18 @@ export class NatsController {
     this.psub!.pull({ batch: 1000, expires: 10000 });
   };
 
-  private startPulling() {
+  public startPulling() {
+    console.log("Start Pulling!");
+    this.pullSubscribe();
+
     // do the initial pull
     this.fn();
     // and now schedule a pull every so often
     const interval = setInterval(this.fn, 10000); // and repeat every 2s
 
-    setTimeout(() => {
-      clearInterval(interval);
-      this.nc!.drain();
-    }, 20000);
+    // setTimeout(() => {
+    //   clearInterval(interval);
+    //   this.nc!.drain();
+    // }, 20000);
   }
 }
