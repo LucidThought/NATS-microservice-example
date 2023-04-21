@@ -1,0 +1,1 @@
+This folder (/node) represents the Node project that acts as a subscriber to the NATS JetStream cluster and listens to the subjects for which it is configured.
