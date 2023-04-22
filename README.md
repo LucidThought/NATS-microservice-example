@@ -4,7 +4,13 @@ This project is a naive example of using a NATS microservice messaging system to
 
 # Docker-Compose
 
-Because this project is being built for demonstration purposes a docker-compose file is provided to start this group of systems easily on one computer. The `log.sh` and `run.sh` files are provided to easily start these systems and log their output. After you have docker and docker-compose installed to your system, you will need to install the packlage dependencies in the Typescript projects with `npm i`. You should then be able to run these (on Linux) with `./run.sh dev up` followed by `./log.sh dev -f` (The `-f` flag will force the log interface to remain in your terminal window).
+Because this project is being built for demonstration purposes a docker-compose file is provided to start this group of systems easily on one computer. The `log.sh` and `run.sh` files are provided to easily start these systems and log their output. After you have docker and docker-compose installed to your system, you will need to install the packlage dependencies in the Typescript projects with `npm i`. You should then be able to run these (on Linux) with the following commands:
+- `docker network create nats` will create a docker network over which network communication happend inside of the docker context. This command in necessary because the docker cluster, the subscribers, and the publishers are each initiated via separate docker-compose .ymls
+- `./run.sh nats up` followed by `./log.sh nats -f` will start the NATS cluster in your local docker environment
+- `./run.sh subscribe up` followed by `./log.sh subscribe -f` (after the NATS cluster intializes) will start the subscribers to the NATS stream and subject list
+- `./run.sh publish up` followed by `./log.sh publish -f` (after the NATS cluster intializes) will start the docker systems responsible for publishing messages to the associated stream and subjects
+
+(The `-f` flag after `log.sh` will force the log interface to remain in your terminal window)
 
 ## TODOs
 
