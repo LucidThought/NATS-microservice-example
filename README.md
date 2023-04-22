@@ -11,3 +11,4 @@ Because this project is being built for demonstration purposes a docker-compose 
 - Code cleanup
 - Increase the number of publishers and subscribers, possibly look at dynamically adding a variable number of both for demonstration purposes
 - Make the subscriber actually do something based on the body of the message; change the message body to be useful in whatever operation that the Subscriber performs (possibly sending HTTP requests or emails)
+- Add checks to get rid of type assertion flags (the ! mark beside variables); we don't want to use these variable unless they have been initialized - possibly make functions to verify this to keep with clean code?
