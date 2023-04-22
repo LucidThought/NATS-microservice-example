@@ -6,16 +6,13 @@ import {
   NatsConnection,
   connect
 } from "nats";
+import constants from "../constants";
 
 export class NatsSubscriber {
   private js: JetStreamClient | undefined;
   private psub: JetStreamPullSubscription | undefined;
   private nc: NatsConnection | undefined;
   private jsonCodec = JSONCodec();
-
-  private stream = "STREAM";
-  private subj = "SUBJECT";
-  private durable = "DURABLE";
 
   async configureStreamManager() {
     console.log("Configure Stream")
@@ -29,7 +26,7 @@ export class NatsSubscriber {
     // Create the JetStreamManager and add applicable streams
     const jsm = await this.nc.jetstreamManager();
     await jsm.streams.add(
-      { name: this.stream, subjects: [this.subj] },
+      { name: constants.streamName, subjects: constants.subjectList },
     );
 
     this.js = this.nc.jetstream();
@@ -38,10 +35,10 @@ export class NatsSubscriber {
 
   async configurePullSubscription() {
     console.log("Configure Pull Subscription");
-    this.psub = await this.js!.pullSubscribe(this.subj, {
+    this.psub = await this.js!.pullSubscribe(constants.subjectList[0], {
       mack: true,
       config: {
-        durable_name: this.durable,
+        durable_name: constants.durableConsumerName,
         ack_policy: AckPolicy.Explicit,
         ack_wait: 4000,
       },
@@ -70,12 +67,12 @@ export class NatsSubscriber {
 
     const fn = () => {
       console.log("[PULL]");
-      this.psub!.pull({ batch: 1, expires: 10000 });
+      this.psub!.pull({ batch: constants.messageBatchSize, expires: constants.pullExpiresMs });
     };
     // do the initial pull
     fn();
     // and now schedule a pull every so often
-    const interval = setInterval(fn, 10000); // and repeat every 10s
+    const interval = setInterval(fn, constants.pullIntervalMs); // and repeat every 10s
 
     // setTimeout(() => {
     //   clearInterval(interval);
