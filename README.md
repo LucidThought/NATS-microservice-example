@@ -8,5 +8,6 @@ Because this project is being built for demonstration purposes a docker-compose 
 
 ## TODOs
 
-- Separate the docker-compose files for the NATS cluster and the Pub/Sub group. Sometimes the NATS cluster doesn't initialize before the Pub/Sub systems come online and try to connect, causing a TIMEOUT error. Starting the NATS cluster and the TS Pub/Sub sytems will have to happen separately.
-- Find out why messages are being delivered to the Subscriber twice (consistently). If the Sub application is pulling existing messages on the NATS queue then duplicates are not seen, but when Sub has caught up to Pub and is reading messages are they are being delivered then duplicates are read from NATS. This may not be a problem, as these duplicates can be ignored in code, but it would be nice to know why this is ocurring.
+- Code cleanup
+- Increase the number of publishers and subscribers, possibly look at dynamically adding a variable number of both for demonstration purposes
+- Make the subscriber actually do something based on the body of the message; change the message body to be useful in whatever operation that the Subscriber performs (possibly sending HTTP requests or emails)
