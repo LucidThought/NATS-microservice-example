@@ -1,0 +1,17 @@
+services:
+  # Publish API
+  publisher-api:
+    image: node:lts-alpine
+    container_name: publlisher-api
+    user: node
+    restart: always
+    working_dir: /home/node/app
+    volumes:
+      - ./publisher:/home/node/app
+    command: npm run dev
+    networks:
+      - nats
+networks:
+  nats:
+    external:
+      name: nats

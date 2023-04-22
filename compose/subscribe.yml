@@ -1,0 +1,17 @@
+services:
+  # Subscribe API
+  subscriber-api:
+    image: node:lts-alpine
+    container_name: subscriber-api
+    user: node
+    restart: always
+    working_dir: /home/node/app
+    volumes:
+      - ./subscriber:/home/node/app
+    command: npm run dev
+    networks:
+      - nats
+networks:
+  nats:
+    external:
+      name: nats
