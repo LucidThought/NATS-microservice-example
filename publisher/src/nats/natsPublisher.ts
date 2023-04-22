@@ -47,8 +47,6 @@ export class NatsPublisher {
       number: Math.floor(Math.random()*4000),
       boolean: true
     };
-    console.log(`Number sent: ${jsMessage.number}`)
-
     // the jetstream client provides a publish that returns
     // a confirmation that the message was received and stored
     // by the server. You can associate various expectations
@@ -62,7 +60,7 @@ export class NatsPublisher {
         expect: { streamName: this.stream },
       }
     );
-    // console.log(`${pa.stream}[${pa.seq}]: duplicate? ${pa.duplicate}`);
+    console.log(`${pa.stream}[${pa.seq}]: {${jsMessage.number}} duplicate? ${pa.duplicate}`);
     // await this.jsm!.streams.delete("B");
     // await this.nc!.drain();
   }
