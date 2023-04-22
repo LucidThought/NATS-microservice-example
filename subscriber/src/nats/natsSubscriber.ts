@@ -70,7 +70,7 @@ export class NatsSubscriber {
 
     const fn = () => {
       console.log("[PULL]");
-      this.psub!.pull({ batch: 1000, expires: 10000 });
+      this.psub!.pull({ batch: 1, expires: 10000 });
     };
     // do the initial pull
     fn();
