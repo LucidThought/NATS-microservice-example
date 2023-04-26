@@ -9,6 +9,8 @@ services:
     volumes:
       - ./subscriber:/home/node/app
     command: npm run dev
+    environment:
+      API_URL: 'base URL for the API that this communicates with'
     networks:
       - nats
 networks:

@@ -9,6 +9,8 @@ services:
     volumes:
       - ./publisher:/home/node/app
     command: npm run dev
+    environment:
+      API_KEY: 'api key to be used for each message'
     networks:
       - nats
 networks:
