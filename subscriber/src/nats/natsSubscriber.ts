@@ -57,6 +57,18 @@ export class NatsSubscriber {
         );
         console.log(this.jsonCodec.decode(m.data));
         m.ack();
+        /*
+         * The work to be done on each payload of data coming through NATS
+         * should around happen here. The possibility of ignoring redelivered messages
+         * or relagating them to some sort of 'dead letter' queue could happen
+         * here as well.
+         *
+         * The question of acknowledging the receipt of this message before or after the
+         * work is done for this message is an implementation detail. I personally think
+         * that ack() should happen before work is attempted, and errors in that work should
+         * be handled explicitly. Until a message is acknowledged it could be redelivered,
+         * which intoduces a need to handle redelivered messages by parsing redeliveryCount.
+         */
       }
     })();
   }
@@ -69,10 +81,10 @@ export class NatsSubscriber {
       console.log("[PULL]");
       this.psub!.pull({ batch: constants.messageBatchSize, expires: constants.pullExpiresMs });
     };
-    // do the initial pull
-    fn();
-    // and now schedule a pull every so often
-    const interval = setInterval(fn, constants.pullIntervalMs); // and repeat every 10s
+
+    fn();// initial pull
+    // repeat every 'pullIntervalMs' milliseconds
+    const interval = setInterval(fn, constants.pullIntervalMs);
 
     // setTimeout(() => {
     //   clearInterval(interval);
