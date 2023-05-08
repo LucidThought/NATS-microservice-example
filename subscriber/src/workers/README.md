@@ -1,0 +1,4 @@
+# NATS Subscriber Workers
+This folder contains some examples of work that each running Subscriber application can preform on each message that is retrieved from the NATS microservice messaging system. These, so far, are merely provided as examples of work that you can delegate to microservices that exist separate from your main application, which will increase the horizontal flexibility of a system. As request volume increases, additional Subscriber services can be added to the pool of subscriber services, which will balance the relative load across each of the members of your subscriber pool.
+
+### NOTE: So far this 'workers' merely holds examples of work that can be done by these subscriber modules.
